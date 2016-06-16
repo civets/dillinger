@@ -1,0 +1,11 @@
+version: '2'
+services:
+  dillinger:
+    build: .
+    container_name: dillinger
+    image: jonbrouse/dillinger
+    ports:
+      - "12345:12345"
+    environment:
+      - "BIND_ADDRESS=0.0.0.0"
+      - "PORT=12345"
