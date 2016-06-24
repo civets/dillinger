@@ -25,6 +25,7 @@ var config = require('./config')()
   , github = require('./plugins/github/server.js')
   , googledrive = require('./plugins/googledrive/server.js')
   , onedrive = require('./plugins/onedrive/server.js')
+  , multipart = require('connect-multiparty')()
   , env = process.env.NODE_ENV || 'development';
 
 app.set('port', process.env.PORT || 8080)
@@ -86,6 +87,8 @@ if ('development' == env) {
 }
 
 app.get('/', routes.index)
+app.post('/upload', multipart, routes.upload)
+app.all('/callback', routes.callback)
 app.get('/not-implemented', routes.not_implemented)
 
 app.use(core)
