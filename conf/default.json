@@ -1,0 +1,14 @@
+{
+    "baseUrl": "http://192.168.56.101:8080/",
+    "qiniu": {
+        "access_key": "",
+        "secret_key": "",
+        "bucket": "kayen",
+
+        // 资源列举
+        "rs_list": {
+            "prefix": "lsk",
+            "limit": 20
+        }
+    }
+}
