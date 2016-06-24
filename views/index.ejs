@@ -41,13 +41,20 @@
 
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.6/assets/owl.carousel.min.css' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.6/assets/owl.theme.default.min.css' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.min.css' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-light.min.css' rel='stylesheet' type='text/css'>
+  <link href='//192.168.56.101:8080/uploadify/uploadify.css' rel='stylesheet' type='text/css'>
+
   <link href="/css/app.css" rel="stylesheet">
 
 
 
 </head>
 <body ng-controller="Base" file-import-drop-target>
-
   <input type="file" accept=".md,.markdown" file-import-choose-file />
 
   <form method="POST" id="downloader">
@@ -64,10 +71,20 @@
   <div class="wrapper">
     <%- include sidebar %>
     <%- include notification %>
+
     <div class="page">
       <%- include navbar %>
       <%- include overlay %>
       <%- include title %>
+
+      <!-- s Fileupload -->
+      <%- include fileupload %>
+      <!-- e Fileupload -->
+
+      <!-- s Carousel -->
+      <%- include carousel %>
+      <!-- e Carousel -->
+
       <div class="g mnone">
         <%- include editor-headers %>
         <%- include editor %>
@@ -75,6 +92,51 @@
       </div>
     </div>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.6/owl.carousel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.12/clipboard.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+  <script src="//192.168.56.101:8080/uploadify/jquery.uploadify.js"></script>
+  <script>
+    $(function() {
+      // 提示
+      var tooltipInstance = $('.tooltip').tooltipster({
+        trigger: 'hover',
+        animation: 'fade',
+        delay: 300,
+        content: 'Copy to clipboard',
+        functionAfter: function(instance, helper){
+          $(instance[0]).tooltipster('content', 'Copy to clipboard');
+        }
+      });
+      // 图片滚动
+      $('.owl-carousel').owlCarousel({
+        items: 4,
+        margin: 4,
+        autoWidth: true
+      });
+      // 复制到剪贴板
+      var clipboard = new Clipboard('.item > img', {
+        text: function(trigger) {
+          var qiniuUrl = trigger.getAttribute('data-qiniu-url');
+          trigger.setAttribute('data-copied', true);
+          return "![Alt text](" + qiniuUrl + ")";
+        }
+      }).on('success', function(e) {
+        // Modify tooltip
+        $(e.trigger).tooltipster('content', 'Copied');
+        console.debug('copied!');
+      });
+      // 文件上传
+      $("#file_upload").uploadify({
+        height        : 30,
+        swf           : 'http://192.168.56.101:8080/uploadify/uploadify.swf',
+        uploader      : 'http://192.168.56.101:8080/upload',
+        width         : 120
+      });
+    });
+  </script>
 
   <%- include footer %>
 </body>
